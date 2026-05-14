@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package rexec.v1;
+
+option go_package = "github.com/Mouriya-Emma/rexecd/proto/v1;rexecv1";
+
+// RemoteExec v1: minimal unary execute. Streaming / mTLS / allowlist are NOT
+// implemented in v1, but their wire positions are reserved below.
+service RemoteExec {
+  rpc Run(RunRequest) returns (RunResponse);
+}
+
+message RunRequest {
+  repeated string argv = 1;
+  map<string, string> env = 2;
+  string cwd = 3;
+  uint32 timeout_seconds = 4;
+
+  // Reserved for future extensions: stdin bytes, allowlist tag, client identity,
+  // signal-on-cancel, working-dir policy, etc. Do not reuse these tag numbers.
+  reserved 5 to 19;
+  reserved "stdin", "allowlist_tag", "client_id", "signal_on_cancel";
+}
+
+message RunResponse {
+  int32 exit_code = 1;
+  bytes stdout = 2;
+  bytes stderr = 3;
+  string error = 4;
+
+  // Reserved for future extensions: terminating signal, streaming chunk seq,
+  // resource usage (rusage), wall-clock duration, started_at timestamp.
+  reserved 5 to 19;
+  reserved "signal", "stream_chunk", "rusage", "duration_ms", "started_at";
+}

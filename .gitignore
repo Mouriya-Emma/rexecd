@@ -4,3 +4,4 @@
 .coder-loop/runtime/state.json.bak.*
 .dev-loop
 .dev-trace.txt
+bin/
